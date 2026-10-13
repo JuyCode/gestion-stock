@@ -1,0 +1,16 @@
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+
+# Archivos locales de respaldo
+gestion-stock-*.xlsx
+gestion-stock-*.json

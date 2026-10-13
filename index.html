@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión Stock — Panel de Control</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app">
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">
+          <img id="brandLogo" src="" alt="Logo" hidden>
+          <svg id="brandIconDefault" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+        </div>
+        <div>
+          <div class="brand-title" id="brandTitle">Mi Negocio</div>
+          <div class="brand-subtitle">Gestión de Stock</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="dashboard">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Inicio</span>
+        </button>
+        <button class="nav-item" data-view="stock">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+          <span>Stock</span>
+          <span class="nav-badge" id="stockAlertBadge" hidden></span>
+        </button>
+        <button class="nav-item" data-view="ventas">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span>Ventas</span>
+        </button>
+        <button class="nav-item" data-view="gastos">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          <span>Gastos</span>
+        </button>
+        <button class="nav-item" data-view="crm">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span>Mini CRM</span>
+        </button>
+        <button class="nav-item" data-view="config">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Configuración</span>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn btn-outline btn-block" id="btnExport">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Exportar a Excel
+        </button>
+        <button class="btn btn-outline btn-block" id="btnImport">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          Importar respaldo
+        </button>
+        <input type="file" id="importFile" accept=".json,.xlsx,.xls" hidden>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="main">
+      <header class="topbar">
+        <h1 id="viewTitle">Panel de Control</h1>
+      </header>
+
+      <div class="content" id="content">
+        <!-- ===== VISTA: DASHBOARD ===== -->
+        <section class="view active" id="view-dashboard">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#e8f5e9">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+              </div>
+              <div>
+                <div class="stat-label">Productos</div>
+                <div class="stat-value" id="statProductos">0</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fff3e0">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+              </div>
+              <div>
+                <div class="stat-label">Unidades en stock</div>
+                <div class="stat-value" id="statUnidades">0</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#e3f2fd">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              </div>
+              <div>
+                <div class="stat-label">Valor del stock</div>
+                <div class="stat-value" id="statValor">$0</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fce4ec">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+              </div>
+              <div>
+                <div class="stat-label">Stock bajo</div>
+                <div class="stat-value" id="statStockBajo">0</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#e8f5e9">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              </div>
+              <div>
+                <div class="stat-label">Ventas del mes</div>
+                <div class="stat-value" id="statVentasMes">$0</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fff3e0">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+              </div>
+              <div>
+                <div class="stat-label">Ganancia estimada</div>
+                <div class="stat-value" id="statGanancia">$0</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-cols">
+            <div class="panel">
+              <div class="panel-header">
+                <h2>Alertas de stock bajo</h2>
+              </div>
+              <div class="panel-body" id="alertasStock">
+                <p class="empty-state">No hay alertas. ¡Tu stock está saludable!</p>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-header">
+                <h2>Últimas ventas</h2>
+              </div>
+              <div class="panel-body" id="ultimasVentas">
+                <p class="empty-state">Todavía no registraste ventas.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== VISTA: STOCK ===== -->
+        <section class="view" id="view-stock">
+          <div class="toolbar">
+            <input type="search" class="input" id="buscarProducto" placeholder="🔍 Buscar producto o marca…">
+            <select class="input" id="filtroMarcaStock">
+              <option value="">Todas las marcas</option>
+            </select>
+            <select class="input" id="filtroEstado">
+              <option value="">Todos los estados</option>
+              <option value="bajo">Stock bajo</option>
+              <option value="medio">Stock medio</option>
+              <option value="ok">Stock OK</option>
+            </select>
+            <button class="btn btn-secondary" id="btnAgregarProducto">＋ Nuevo producto</button>
+          </div>
+          <div class="table-wrap">
+            <table class="table" id="tablaStock">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Marca</th>
+                  <th class="col-stock">Stock</th>
+                  <th class="num">P. Compra</th>
+                  <th class="num">P. Venta</th>
+                  <th class="num">Ganancia</th>
+                  <th class="num">Valor en stock</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyStock"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ===== VISTA: VENTAS ===== -->
+        <section class="view" id="view-ventas">
+          <div class="toolbar">
+            <input type="search" class="input" id="buscarVenta" placeholder="🔍 Buscar venta…">
+            <button class="btn btn-secondary" id="btnNuevaVenta">＋ Registrar venta</button>
+          </div>
+          <div class="table-wrap">
+            <table class="table" id="tablaVentas">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Productos</th>
+                  <th class="num">Total</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyVentas"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ===== VISTA: GASTOS ===== -->
+        <section class="view" id="view-gastos">
+          <div class="toolbar">
+            <select class="input" id="filtroCategoriaGasto">
+              <option value="">Todas las categorías</option>
+            </select>
+            <button class="btn btn-secondary" id="btnNuevoGasto">＋ Registrar gasto</button>
+          </div>
+          <div class="table-wrap">
+            <table class="table" id="tablaGastos">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Descripción</th>
+                  <th>Categoría</th>
+                  <th class="num">Monto</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyGastos"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ===== VISTA: CRM ===== -->
+        <section class="view" id="view-crm">
+          <div class="toolbar">
+            <input type="search" class="input" id="buscarCliente" placeholder="🔍 Buscar cliente…">
+            <button class="btn btn-secondary" id="btnNuevoCliente">＋ Nuevo cliente</button>
+          </div>
+          <div class="table-wrap">
+            <table class="table" id="tablaClientes">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Contacto</th>
+                  <th>Total comprado</th>
+                  <th>Última compra</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyClientes"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ===== VISTA: CONFIGURACIÓN ===== -->
+        <section class="view" id="view-config">
+          <div class="config-grid">
+            <div class="panel">
+              <div class="panel-header"><h2>Datos del negocio</h2></div>
+              <div class="panel-body">
+                <label class="field">
+                  <span>Nombre del negocio</span>
+                  <input type="text" class="input" id="cfgNombre">
+                </label>
+                <label class="field">
+                  <span>Logo del negocio</span>
+                  <input type="file" class="input" id="cfgLogo" accept="image/*">
+                </label>
+                <label class="field">
+                  <span>Color de fondo</span>
+                  <div class="color-picker-row">
+                    <input type="color" id="cfgBgColor" value="#f1f5f4">
+                    <input type="text" class="input" id="cfgBgColorText" value="#f1f5f4" maxlength="7">
+                  </div>
+                </label>
+                <label class="field">
+                  <span>Color barra lateral</span>
+                  <div class="color-picker-row">
+                    <input type="color" id="cfgSidebarColor" value="#14352a">
+                    <input type="text" class="input" id="cfgSidebarColorText" value="#14352a" maxlength="7">
+                  </div>
+                </label>
+                <label class="field">
+                  <span>Moneda (símbolo)</span>
+                  <input type="text" class="input" id="cfgMoneda" maxlength="3" placeholder="$">
+                </label>
+                <label class="field">
+                  <span>Stock mínimo (alerta roja)</span>
+                  <input type="number" class="input" id="cfgStockMin" min="1">
+                </label>
+                <label class="field">
+                  <span>Stock medio (alerta amarilla)</span>
+                  <input type="number" class="input" id="cfgStockMedio" min="1">
+                </label>
+                <button class="btn btn-primary btn-block" id="btnGuardarConfig">Guardar cambios</button>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-header"><h2>Marcas</h2></div>
+              <div class="panel-body">
+                <div class="marca-add">
+                  <input type="text" class="input" id="nuevaMarca" placeholder="Nueva marca…">
+                  <button class="btn btn-secondary" id="btnAgregarMarca">Agregar</button>
+                </div>
+                <ul class="marca-list" id="listaMarcas"></ul>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-header"><h2>Datos</h2></div>
+              <div class="panel-body">
+                <p class="muted">Esto borra todos los productos, ventas, gastos y clientes guardados en este navegador.</p>
+                <button class="btn btn-danger btn-block" id="btnReset">Restablecer todo</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- ============ PANEL LATERAL: ENTRADA DE MERCADERÍA ============ -->
+  <div class="overlay" id="overlayEntrada"></div>
+  <aside class="side-panel" id="panelEntrada">
+    <div class="sp-header">
+      <h2>Entrada de Mercadería</h2>
+      <button class="icon-btn" id="btnCerrarEntrada" title="Cerrar">✕</button>
+    </div>
+
+    <div class="sp-body">
+      <div class="sp-card">
+        <h3>Entrada de Stock</h3>
+        <div class="tabs">
+          <button class="tab active" id="tabExistente">Existente</button>
+          <button class="tab" id="tabNuevo">Nuevo Producto</button>
+        </div>
+
+        <!-- Tab: producto existente -->
+        <div class="tab-panel active" id="panelExistente">
+          <label class="field">
+            <span>Marca</span>
+            <div class="marca-new-row">
+              <label class="check">
+                <input type="checkbox" id="chkMarcaNueva">
+                <span>¿Marca nueva?</span>
+              </label>
+            </div>
+            <select class="input" id="selMarcaEntrada">
+              <option value="">Selecciona Marca</option>
+            </select>
+            <div id="inputMarcaNuevaWrap" hidden>
+              <input type="text" class="input" id="inputMarcaNueva" placeholder="Nombre de la nueva marca">
+            </div>
+          </label>
+          <label class="field">
+            <span>Producto</span>
+            <select class="input" id="selProductoEntrada">
+              <option value="">Selecciona Producto</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Cantidad a ingresar</span>
+            <input type="number" class="input" id="cantidadEntrada" min="1" value="0">
+          </label>
+          <button class="btn btn-primary btn-block" id="btnAgregarLista">＋ Agregar</button>
+        </div>
+
+        <!-- Tab: producto nuevo -->
+        <div class="tab-panel" id="panelNuevo">
+          <label class="field">
+            <span>Marca</span>
+            <select class="input" id="selMarcaNuevo">
+              <option value="">Selecciona Marca</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Nombre del producto</span>
+            <input type="text" class="input" id="nuevoProductoNombre" placeholder="Ej: Camiseta Básica Algodón">
+          </label>
+          <label class="field">
+            <span>Precio de compra</span>
+            <input type="number" class="input" id="nuevoProductoCompra" min="0" step="0.01" placeholder="0.00">
+          </label>
+          <label class="field">
+            <span>Precio de venta</span>
+            <input type="number" class="input" id="nuevoProductoVenta" min="0" step="0.01" placeholder="0.00">
+          </label>
+          <label class="field">
+            <span>Cantidad inicial</span>
+            <input type="number" class="input" id="nuevoProductoCantidad" min="1" value="1">
+          </label>
+          <button class="btn btn-primary btn-block" id="btnCrearProducto">＋ Crear y agregar a la lista</button>
+        </div>
+      </div>
+
+      <h3 class="sp-list-title">Lista (<span id="listaCount">0</span>)</h3>
+      <ul class="sp-list" id="listaEntrada"></ul>
+      <div id="listaEmpty" class="empty-state">
+        Agregá productos a la lista para darles entrada al stock.
+      </div>
+    </div>
+
+    <div class="sp-footer">
+      <div class="sp-footer-row">
+        <span>Total unidades:</span>
+        <strong id="totalUnidadesEntrada">0</strong>
+      </div>
+      <div class="sp-footer-row">
+        <span>Costo total:</span>
+        <strong id="costoTotalEntrada">$0</strong>
+      </div>
+      <button class="btn btn-success btn-block" id="btnConfirmarEntrada" disabled>Confirmar entrada</button>
+    </div>
+  </aside>
+
+  <!-- ============ MODAL: PRODUCTO ============ -->
+  <div class="overlay" id="overlayProducto"></div>
+  <div class="modal" id="modalProducto">
+    <div class="modal-header">
+      <h2 id="modalProductoTitle">Nuevo producto</h2>
+      <button class="icon-btn" data-close="modalProducto">✕</button>
+    </div>
+    <div class="modal-body">
+      <label class="field"><span>Nombre</span>
+        <input type="text" class="input" id="prodNombre">
+      </label>
+      <label class="field"><span>Marca</span>
+        <select class="input" id="prodMarca"></select>
+      </label>
+      <label class="field"><span>Stock actual</span>
+        <input type="number" class="input" id="prodStock" min="0">
+      </label>
+      <label class="field"><span>Precio de compra</span>
+        <input type="number" class="input" id="prodCompra" min="0" step="0.01">
+      </label>
+      <label class="field"><span>Precio de venta</span>
+        <input type="number" class="input" id="prodVenta" min="0" step="0.01">
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close="modalProducto">Cancelar</button>
+      <button class="btn btn-primary" id="btnGuardarProducto">Guardar</button>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: VENTA ============ -->
+  <div class="overlay" id="overlayVenta"></div>
+  <div class="modal" id="modalVenta">
+    <div class="modal-header">
+      <h2>Registrar venta</h2>
+      <button class="icon-btn" data-close="modalVenta">✕</button>
+    </div>
+    <div class="modal-body">
+      <label class="field"><span>Cliente (opcional)</span>
+        <select class="input" id="ventaCliente">
+          <option value="">— Venta sin cliente —</option>
+        </select>
+      </label>
+      <div class="field">
+        <span>Productos</span>
+        <div id="ventaItems"></div>
+        <button class="btn btn-ghost btn-block" id="btnAgregarItemVenta">＋ Agregar producto</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close="modalVenta">Cancelar</button>
+      <button class="btn btn-success" id="btnGuardarVenta">Guardar venta</button>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: GASTO ============ -->
+  <div class="overlay" id="overlayGasto"></div>
+  <div class="modal" id="modalGasto">
+    <div class="modal-header">
+      <h2>Registrar gasto</h2>
+      <button class="icon-btn" data-close="modalGasto">✕</button>
+    </div>
+    <div class="modal-body">
+      <label class="field"><span>Descripción</span>
+        <input type="text" class="input" id="gastoDescripcion" placeholder="Ej: Alquiler local">
+      </label>
+      <label class="field"><span>Categoría</span>
+        <input type="text" class="input" id="gastoCategoria" list="categoriasGasto" placeholder="Ej: Alquiler, Servicios…">
+        <datalist id="categoriasGasto"></datalist>
+      </label>
+      <label class="field"><span>Monto</span>
+        <input type="number" class="input" id="gastoMonto" min="0" step="0.01" placeholder="0.00">
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close="modalGasto">Cancelar</button>
+      <button class="btn btn-primary" id="btnGuardarGasto">Guardar gasto</button>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: CLIENTE ============ -->
+  <div class="overlay" id="overlayCliente"></div>
+  <div class="modal" id="modalCliente">
+    <div class="modal-header">
+      <h2 id="modalClienteTitle">Nuevo cliente</h2>
+      <button class="icon-btn" data-close="modalCliente">✕</button>
+    </div>
+    <div class="modal-body">
+      <label class="field"><span>Nombre</span>
+        <input type="text" class="input" id="cliNombre">
+      </label>
+      <label class="field"><span>Teléfono</span>
+        <input type="text" class="input" id="cliTelefono">
+      </label>
+      <label class="field"><span>Email</span>
+        <input type="email" class="input" id="cliEmail">
+      </label>
+      <label class="field"><span>Notas</span>
+        <textarea class="input" id="cliNotas" rows="3" placeholder="Observaciones del cliente…"></textarea>
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" data-close="modalCliente">Cancelar</button>
+      <button class="btn btn-primary" id="btnGuardarCliente">Guardar</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="libs/xlsx.full.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
