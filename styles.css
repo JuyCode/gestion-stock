@@ -810,6 +810,172 @@ select.input {
 ::-webkit-scrollbar-thumb { background: #cbd5d1; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #94a8a0; }
 
+/* ============ BIENVENIDA ============ */
+.modal-bienvenida {
+  width: 540px;
+  overflow: hidden;
+}
+
+.bienvenida-hero {
+  background: linear-gradient(135deg, var(--sidebar-bg), var(--primary-dark));
+  color: #fff;
+  padding: 32px 28px 26px;
+  text-align: center;
+}
+
+.bienvenida-logo {
+  width: 64px; height: 64px;
+  margin: 0 auto 14px;
+  background: rgba(255,255,255,.14);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bienvenida-logo svg { width: 34px; height: 34px; }
+
+.bienvenida-hero h2 {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.bienvenida-hero p {
+  font-size: 14px;
+  opacity: .85;
+  line-height: 1.5;
+}
+
+.bienvenida-body {
+  padding: 22px 28px;
+}
+
+.bienvenida-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.bienvenida-feature {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.bf-icon {
+  width: 36px; height: 36px;
+  flex-shrink: 0;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bienvenida-feature strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+.bienvenida-feature span {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.bienvenida-check {
+  padding: 12px 14px;
+  background: #f8faf9;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.bienvenida-nota {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.bienvenida-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 16px 28px 22px;
+}
+
+@media (max-width: 520px) {
+  .bienvenida-features { grid-template-columns: 1fr; }
+  .bienvenida-footer { flex-direction: column-reverse; }
+  .bienvenida-footer .btn { width: 100%; }
+}
+
+/* ============ TOUR GUIADO ============ */
+.tour-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+}
+
+.tour-overlay[hidden] { display: none; }
+
+.tour-highlight {
+  position: fixed;
+  border-radius: 10px;
+  box-shadow: 0 0 0 9999px rgba(10, 25, 20, .68);
+  outline: 3px solid var(--primary);
+  outline-offset: 0;
+  transition: top .3s ease, left .3s ease, width .3s ease, height .3s ease;
+  pointer-events: none;
+}
+
+.tour-tooltip {
+  position: fixed;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  background: var(--surface);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  padding: 18px 20px;
+  transition: top .3s ease, left .3s ease;
+  z-index: 301;
+}
+
+.tour-step-count {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.tour-tooltip h3 {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.tour-tooltip p {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.tour-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tour-nav { display: flex; gap: 8px; }
+
 /* ============ RESPONSIVE ============ */
 @media (max-width: 768px) {
   .sidebar { width: 64px; padding: 16px 8px; }

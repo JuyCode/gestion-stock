@@ -50,6 +50,10 @@
         </button>
       </nav>
       <div class="sidebar-footer">
+        <button class="btn btn-outline btn-block" id="btnTutorial">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          Ver tutorial
+        </button>
         <button class="btn btn-outline btn-block" id="btnExport">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
           Exportar a Excel
@@ -513,6 +517,72 @@
     <div class="modal-footer">
       <button class="btn btn-ghost" data-close="modalCliente">Cancelar</button>
       <button class="btn btn-primary" id="btnGuardarCliente">Guardar</button>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: BIENVENIDA ============ -->
+  <div class="overlay" id="overlayBienvenida"></div>
+  <div class="modal modal-bienvenida" id="modalBienvenida">
+    <div class="bienvenida-hero">
+      <div class="bienvenida-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+      </div>
+      <h2>¡Bienvenido/a a tu Gestión de Stock!</h2>
+      <p>La herramienta para controlar productos, ventas, gastos y clientes de tu emprendimiento. Todo en un solo lugar y desde tu navegador.</p>
+    </div>
+    <div class="bienvenida-body">
+      <div class="bienvenida-features">
+        <div class="bienvenida-feature">
+          <span class="bf-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+          </span>
+          <div><strong>Controlá tu stock</strong><span>Sabé siempre qué te queda y qué reponer.</span></div>
+        </div>
+        <div class="bienvenida-feature">
+          <span class="bf-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          </span>
+          <div><strong>Registrá ventas y gastos</strong><span>Mirá tus ganancias en tiempo real.</span></div>
+        </div>
+        <div class="bienvenida-feature">
+          <span class="bf-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          </span>
+          <div><strong>Conocé a tus clientes</strong><span>Tené sus datos y su historial a mano.</span></div>
+        </div>
+        <div class="bienvenida-feature">
+          <span class="bf-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          </span>
+          <div><strong>Respaldá en Excel</strong><span>Descargá todos tus datos cuando quieras.</span></div>
+        </div>
+      </div>
+      <label class="check bienvenida-check">
+        <input type="checkbox" id="chkCargarEjemplos" checked>
+        <span>Cargar productos de ejemplo para empezar a probar</span>
+      </label>
+      <p class="bienvenida-nota">Tus datos se guardan solo en tu navegador. Nadie más los ve.</p>
+    </div>
+    <div class="bienvenida-footer">
+      <button class="btn btn-ghost" id="btnBienvenidaSaltar">Explorar por mi cuenta</button>
+      <button class="btn btn-primary" id="btnBienvenidaTutorial">Ver el tutorial</button>
+    </div>
+  </div>
+
+  <!-- ============ TOUR GUIADO ============ -->
+  <div class="tour-overlay" id="tourOverlay" hidden>
+    <div class="tour-highlight" id="tourHighlight"></div>
+    <div class="tour-tooltip" id="tourTooltip">
+      <div class="tour-step-count" id="tourStepCount">Paso 1</div>
+      <h3 id="tourTitulo"></h3>
+      <p id="tourTexto"></p>
+      <div class="tour-actions">
+        <button class="btn btn-ghost btn-sm" id="tourSaltar">Saltar</button>
+        <div class="tour-nav">
+          <button class="btn btn-secondary btn-sm" id="tourAnterior">Anterior</button>
+          <button class="btn btn-primary btn-sm" id="tourSiguiente">Siguiente</button>
+        </div>
+      </div>
     </div>
   </div>
 

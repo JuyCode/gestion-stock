@@ -6,16 +6,19 @@
 const STORAGE_KEY = 'gestionStock_v1';
 
 /* ---------- Estado ---------- */
+const DEFAULT_CONFIG = {
+  nombre: 'Mi Negocio',
+  moneda: '$',
+  stockMin: 10,   // <= rojo
+  stockMedio: 20, // <= amarillo
+  bgColor: '#f1f5f4',
+  sidebarColor: '#14352a',
+  logo: null,
+  tutorialVisto: false
+};
+
 let state = {
-  config: {
-    nombre: 'Mi Negocio',
-    moneda: '$',
-    stockMin: 10,   // <= rojo
-    stockMedio: 20, // <= amarillo
-    bgColor: '#f1f5f4',
-    sidebarColor: '#14352a',
-    logo: null
-  },
+  config: { ...DEFAULT_CONFIG },
   marcas: [],
   productos: [],
   ventas: [],
@@ -77,7 +80,8 @@ function cargar() {
     if (raw) {
       const data = JSON.parse(raw);
       state = { ...state, ...data };
-      state.config = { ...state.config, ...(data.config || {}) };
+      // Aplicar los valores por defecto para las claves nuevas/ausentes
+      state.config = { ...DEFAULT_CONFIG, ...(data.config || {}) };
     }
   } catch (e) {
     console.error('Error cargando datos', e);
@@ -190,7 +194,7 @@ function importarJSON(file) {
     try {
       const data = JSON.parse(e.target.result);
       state = { ...state, ...data };
-      state.config = { ...state.config, ...(data.config || {}) };
+      state.config = { ...DEFAULT_CONFIG, ...(data.config || {}) };
       guardar();
       renderTodo();
       toast('Respaldo importado correctamente');
@@ -1212,8 +1216,139 @@ function esc(str) {
 function cerrarModales() {
   $$('.modal.open').forEach(m => m.classList.remove('open'));
   $$('.overlay').forEach(o => {
-    if (o.id !== 'overlayEntrada') o.classList.remove('open');
+    if (o.id !== 'overlayEntrada' && o.id !== 'overlayBienvenida') o.classList.remove('open');
   });
+}
+
+/* ============================================================
+   BIENVENIDA + TUTORIAL
+   ============================================================ */
+function abrirBienvenida(esPrimeraVez) {
+  const checkWrap = document.querySelector('.bienvenida-check');
+  if (checkWrap) checkWrap.style.display = esPrimeraVez ? '' : 'none';
+  $('#chkCargarEjemplos').checked = !!esPrimeraVez;
+  $('#modalBienvenida').dataset.primeraVez = esPrimeraVez ? '1' : '0';
+  $('#overlayBienvenida').classList.add('open');
+  $('#modalBienvenida').classList.add('open');
+}
+
+function cerrarBienvenida() {
+  $('#overlayBienvenida').classList.remove('open');
+  $('#modalBienvenida').classList.remove('open');
+}
+
+function vaciarDatos() {
+  state.marcas = [];
+  state.productos = [];
+  state.ventas = [];
+  state.gastos = [];
+  state.clientes = [];
+}
+
+function confirmarBienvenida(verTutorial) {
+  const esPrimeraVez = $('#modalBienvenida').dataset.primeraVez === '1';
+  if (esPrimeraVez && !$('#chkCargarEjemplos').checked) {
+    vaciarDatos();
+  }
+  state.config.tutorialVisto = true;
+  guardar();
+  renderTodo();
+  cerrarBienvenida();
+  if (verTutorial) {
+    setTimeout(iniciarTour, 350);
+  }
+}
+
+const TOUR_PASOS = [
+  { sel: '.sidebar-brand', view: 'dashboard', titulo: 'Tu espacio de trabajo', texto: '¡Te damos la bienvenida! Desde el menú de la izquierda accedés a todas las secciones de tu negocio.' },
+  { sel: '[data-view="dashboard"]', view: 'dashboard', titulo: 'Inicio', texto: 'El panel principal. De un vistazo ves tus métricas, las alertas de stock bajo y tus últimas ventas.' },
+  { sel: '[data-view="stock"]', view: 'stock', titulo: 'Stock', texto: 'Tu inventario completo. Cargá productos, editá precios y mirá el semáforo de stock: verde, amarillo y rojo.' },
+  { sel: '[data-view="ventas"]', view: 'ventas', titulo: 'Ventas', texto: 'Registrá cada venta. El stock se descuenta solo y podés asociarla a un cliente.' },
+  { sel: '[data-view="gastos"]', view: 'gastos', titulo: 'Gastos', texto: 'Anotá tus gastos por categoría para conocer tu ganancia real.' },
+  { sel: '[data-view="crm"]', view: 'crm', titulo: 'Mini CRM', texto: 'Tu lista de clientes con contacto, notas y su historial de compras.' },
+  { sel: '[data-view="config"]', view: 'config', titulo: 'Configuración', texto: 'Personalizá el nombre, el logo y los colores, y ajustá los niveles de alerta de stock.' },
+  { sel: '#btnExport', view: 'config', titulo: 'Respaldá tus datos', texto: 'Descargá todo en Excel cuando quieras. Si cambiás de dispositivo, lo volvés a cargar con "Importar respaldo".' }
+];
+
+let tourIndex = 0;
+
+function iniciarTour() {
+  tourIndex = 0;
+  $('#tourOverlay').hidden = false;
+  mostrarPasoTour();
+}
+
+function cerrarTour() {
+  $('#tourOverlay').hidden = true;
+  state.config.tutorialVisto = true;
+  guardar();
+}
+
+function mostrarPasoTour() {
+  const paso = TOUR_PASOS[tourIndex];
+  if (paso.view) switchView(paso.view);
+  const el = document.querySelector(paso.sel);
+  if (!el) { siguientePaso(); return; }
+
+  const mostrar = () => {
+    const rect = el.getBoundingClientRect();
+    destacarElemento(rect);
+    $('#tourStepCount').textContent = `Paso ${tourIndex + 1} de ${TOUR_PASOS.length}`;
+    $('#tourTitulo').textContent = paso.titulo;
+    $('#tourTexto').textContent = paso.texto;
+    $('#tourAnterior').disabled = tourIndex === 0;
+    $('#tourSiguiente').textContent = tourIndex === TOUR_PASOS.length - 1 ? 'Finalizar' : 'Siguiente';
+    posicionarTooltip(rect);
+  };
+  // Pequeña espera si cambiamos de vista (por la animación)
+  setTimeout(mostrar, paso.view ? 150 : 20);
+}
+
+function destacarElemento(rect) {
+  const pad = 6;
+  const h = $('#tourHighlight');
+  h.style.top = (rect.top - pad) + 'px';
+  h.style.left = (rect.left - pad) + 'px';
+  h.style.width = (rect.width + pad * 2) + 'px';
+  h.style.height = (rect.height + pad * 2) + 'px';
+}
+
+function posicionarTooltip(rect) {
+  const tooltip = $('#tourTooltip');
+  const tw = tooltip.offsetWidth || 320;
+  const th = tooltip.offsetHeight || 180;
+  const margin = 16;
+  let left, top;
+
+  if (rect.right + margin + tw <= window.innerWidth) {
+    left = rect.right + margin;
+    top = rect.top + rect.height / 2 - th / 2;
+  } else if (rect.left - margin - tw >= 0) {
+    left = rect.left - margin - tw;
+    top = rect.top + rect.height / 2 - th / 2;
+  } else {
+    left = rect.left + rect.width / 2 - tw / 2;
+    top = rect.bottom + margin;
+  }
+
+  top = Math.max(12, Math.min(top, window.innerHeight - th - 12));
+  left = Math.max(12, Math.min(left, window.innerWidth - tw - 12));
+  tooltip.style.left = left + 'px';
+  tooltip.style.top = top + 'px';
+}
+
+function anteriorPaso() {
+  if (tourIndex > 0) { tourIndex--; mostrarPasoTour(); }
+}
+
+function siguientePaso() {
+  if (tourIndex < TOUR_PASOS.length - 1) {
+    tourIndex++;
+    mostrarPasoTour();
+  } else {
+    cerrarTour();
+    toast('¡Listo! Ya podés empezar a usar tu gestión de stock');
+  }
 }
 
 /* ============================================================
@@ -1304,6 +1439,27 @@ function bindEvents() {
     e.target.value = '';
   });
 
+  // Bienvenida
+  $('#btnBienvenidaSaltar').addEventListener('click', () => confirmarBienvenida(false));
+  $('#btnBienvenidaTutorial').addEventListener('click', () => confirmarBienvenida(true));
+
+  // Tutorial
+  $('#btnTutorial').addEventListener('click', iniciarTour);
+  $('#tourSaltar').addEventListener('click', cerrarTour);
+  $('#tourAnterior').addEventListener('click', anteriorPaso);
+  $('#tourSiguiente').addEventListener('click', siguientePaso);
+  window.addEventListener('resize', () => {
+    if (!$('#tourOverlay').hidden) {
+      const paso = TOUR_PASOS[tourIndex];
+      const el = document.querySelector(paso.sel);
+      if (el) {
+        const r = el.getBoundingClientRect();
+        destacarElemento(r);
+        posicionarTooltip(r);
+      }
+    }
+  });
+
   // Cerrar modales
   $$('[data-close]').forEach(btn => {
     btn.addEventListener('click', () => cerrarModales());
@@ -1317,13 +1473,13 @@ function bindEvents() {
   // Atajos de teclado
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+      if (!$('#tourOverlay').hidden) { cerrarTour(); return; }
       cerrarModales();
       cerrarPanelEntrada();
     }
-    if (e.key === 'Enter' && $('#panelEntrada').classList.contains('open')) {
-      if (document.activeElement && document.activeElement.tagName === 'INPUT') {
-        // no interceptar en inputs de texto para permitir Enter en marcas
-      }
+    if (!$('#tourOverlay').hidden) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); siguientePaso(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); anteriorPaso(); }
     }
   });
 }
@@ -1331,7 +1487,12 @@ function bindEvents() {
 /* ============================================================
    INIT
    ============================================================ */
+const esPrimeraVez = !localStorage.getItem(STORAGE_KEY);
 seed();
 cargar();
 renderTodo();
 bindEvents();
+
+if (esPrimeraVez || !state.config.tutorialVisto) {
+  abrirBienvenida(esPrimeraVez);
+}
