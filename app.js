@@ -1203,6 +1203,18 @@ function resetearTodo() {
 /* ============================================================
    HELPERS GENERALES
    ============================================================ */
+function abrirMenu() {
+  $('#sidebar').classList.add('open');
+  $('#sidebarOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function cerrarMenu() {
+  $('#sidebar').classList.remove('open');
+  $('#sidebarOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
 function esc(str) {
   if (str === null || str === undefined) return '';
   return String(str)
@@ -1291,14 +1303,21 @@ function mostrarPasoTour() {
   if (!el) { siguientePaso(); return; }
 
   const mostrar = () => {
-    const rect = el.getBoundingClientRect();
-    destacarElemento(rect);
+    const movil = window.innerWidth <= 768;
+    if (movil) {
+      // En celular mostramos la tarjeta centrada (sin resaltar elementos del menú oculto)
+      $('#tourOverlay').classList.add('tour-mobile');
+    } else {
+      $('#tourOverlay').classList.remove('tour-mobile');
+      const rect = el.getBoundingClientRect();
+      destacarElemento(rect);
+      posicionarTooltip(rect);
+    }
     $('#tourStepCount').textContent = `Paso ${tourIndex + 1} de ${TOUR_PASOS.length}`;
     $('#tourTitulo').textContent = paso.titulo;
     $('#tourTexto').textContent = paso.texto;
     $('#tourAnterior').disabled = tourIndex === 0;
     $('#tourSiguiente').textContent = tourIndex === TOUR_PASOS.length - 1 ? 'Finalizar' : 'Siguiente';
-    posicionarTooltip(rect);
   };
   // Pequeña espera si cambiamos de vista (por la animación)
   setTimeout(mostrar, paso.view ? 150 : 20);
@@ -1470,10 +1489,26 @@ function bindEvents() {
     }
   });
 
+  // Menú móvil (drawer)
+  $('#menuToggle').addEventListener('click', () => {
+    if ($('#sidebar').classList.contains('open')) cerrarMenu();
+    else abrirMenu();
+  });
+  $('#sidebarOverlay').addEventListener('click', cerrarMenu);
+  $('#sidebar').addEventListener('click', (e) => {
+    if (e.target.closest('.nav-item') || e.target.closest('.sidebar-footer .btn')) {
+      cerrarMenu();
+    }
+  });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) cerrarMenu();
+  });
+
   // Atajos de teclado
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       if (!$('#tourOverlay').hidden) { cerrarTour(); return; }
+      if ($('#sidebar').classList.contains('open')) { cerrarMenu(); return; }
       cerrarModales();
       cerrarPanelEntrada();
     }
