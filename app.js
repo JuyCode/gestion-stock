@@ -1185,7 +1185,8 @@ function cargarLogo(file) {
       const ctx = canvas.getContext('2d');
       ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(img, 0, 0, width, height);
-      state.config.logo = canvas.toDataURL('image/jpeg', 0.9);
+      // PNG para conservar la transparencia del logo (el JPEG dejaba fondo negro)
+      state.config.logo = canvas.toDataURL('image/png');
       guardar();
       renderTodo();
       toast('Logo actualizado', 'success');
