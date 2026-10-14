@@ -1295,8 +1295,19 @@ function iniciarTour() {
 
 function cerrarTour() {
   $('#tourOverlay').hidden = true;
+  $('#tourOverlay').classList.remove('tour-mobile');
+  $('#sidebar').classList.remove('open');
+  document.body.style.overflow = '';
   state.config.tutorialVisto = true;
   guardar();
+}
+
+function rellenarPasoTour(paso) {
+  $('#tourStepCount').textContent = `Paso ${tourIndex + 1} de ${TOUR_PASOS.length}`;
+  $('#tourTitulo').textContent = paso.titulo;
+  $('#tourTexto').textContent = paso.texto;
+  $('#tourAnterior').disabled = tourIndex === 0;
+  $('#tourSiguiente').textContent = tourIndex === TOUR_PASOS.length - 1 ? 'Finalizar' : 'Siguiente';
 }
 
 function mostrarPasoTour() {
@@ -1305,25 +1316,29 @@ function mostrarPasoTour() {
   const el = document.querySelector(paso.sel);
   if (!el) { siguientePaso(); return; }
 
-  const mostrar = () => {
-    const movil = window.innerWidth <= 768;
-    if (movil) {
-      // En celular mostramos la tarjeta centrada (sin resaltar elementos del menú oculto)
-      $('#tourOverlay').classList.add('tour-mobile');
-    } else {
-      $('#tourOverlay').classList.remove('tour-mobile');
+  const movil = window.innerWidth <= 768;
+
+  if (movil) {
+    // En celular abrimos el menú lateral para que se vea la sección resaltada
+    $('#tourOverlay').classList.add('tour-mobile');
+    $('#sidebar').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    // Esperamos a que termine la animación del menú antes de medir
+    setTimeout(() => {
       const rect = el.getBoundingClientRect();
       destacarElemento(rect);
+      rellenarPasoTour(paso);
+      posicionarTooltipMovil(rect);
+    }, 340);
+  } else {
+    $('#tourOverlay').classList.remove('tour-mobile');
+    setTimeout(() => {
+      const rect = el.getBoundingClientRect();
+      destacarElemento(rect);
+      rellenarPasoTour(paso);
       posicionarTooltip(rect);
-    }
-    $('#tourStepCount').textContent = `Paso ${tourIndex + 1} de ${TOUR_PASOS.length}`;
-    $('#tourTitulo').textContent = paso.titulo;
-    $('#tourTexto').textContent = paso.texto;
-    $('#tourAnterior').disabled = tourIndex === 0;
-    $('#tourSiguiente').textContent = tourIndex === TOUR_PASOS.length - 1 ? 'Finalizar' : 'Siguiente';
-  };
-  // Pequeña espera si cambiamos de vista (por la animación)
-  setTimeout(mostrar, paso.view ? 150 : 20);
+    }, paso.view ? 150 : 20);
+  }
 }
 
 function destacarElemento(rect) {
@@ -1337,6 +1352,11 @@ function destacarElemento(rect) {
 
 function posicionarTooltip(rect) {
   const tooltip = $('#tourTooltip');
+  // Limpiar estilos del modo celular
+  tooltip.style.right = '';
+  tooltip.style.bottom = '';
+  tooltip.style.width = '';
+  tooltip.style.transform = '';
   const tw = tooltip.offsetWidth || 320;
   const th = tooltip.offsetHeight || 180;
   const margin = 16;
@@ -1357,6 +1377,25 @@ function posicionarTooltip(rect) {
   left = Math.max(12, Math.min(left, window.innerWidth - tw - 12));
   tooltip.style.left = left + 'px';
   tooltip.style.top = top + 'px';
+}
+
+// En celular el cartel se ancla arriba o abajo (el lado con más espacio), así no tapa la sección resaltada
+function posicionarTooltipMovil(rect) {
+  const tooltip = $('#tourTooltip');
+  const margin = 12;
+  tooltip.style.transform = 'none';
+  tooltip.style.width = 'auto';
+  tooltip.style.left = margin + 'px';
+  tooltip.style.right = margin + 'px';
+  const espacioAbajo = window.innerHeight - rect.bottom;
+  const espacioArriba = rect.top;
+  if (espacioAbajo >= espacioArriba) {
+    tooltip.style.top = 'auto';
+    tooltip.style.bottom = margin + 'px';
+  } else {
+    tooltip.style.top = margin + 'px';
+    tooltip.style.bottom = 'auto';
+  }
 }
 
 function anteriorPaso() {
@@ -1477,7 +1516,8 @@ function bindEvents() {
       if (el) {
         const r = el.getBoundingClientRect();
         destacarElemento(r);
-        posicionarTooltip(r);
+        if (window.innerWidth <= 768) posicionarTooltipMovil(r);
+        else posicionarTooltip(r);
       }
     }
   });
@@ -1499,9 +1539,9 @@ function bindEvents() {
   });
   $('#sidebarOverlay').addEventListener('click', cerrarMenu);
   $('#sidebar').addEventListener('click', (e) => {
-    if (e.target.closest('.nav-item') || e.target.closest('.sidebar-footer .btn')) {
-      cerrarMenu();
-    }
+    if (e.target.closest('.nav-item')) { cerrarMenu(); return; }
+    const btn = e.target.closest('.sidebar-footer .btn');
+    if (btn && btn.id !== 'btnTutorial') cerrarMenu();
   });
   window.addEventListener('resize', () => {
     if (window.innerWidth > 768) cerrarMenu();

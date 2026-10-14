@@ -1075,18 +1075,13 @@ select.input {
   .venta-item-row { grid-template-columns: 1fr 70px 32px; }
   .venta-item-subtotal { grid-column: 2; text-align: center; }
 
-  /* Tutorial en celular: tarjeta centrada */
-  .tour-overlay.tour-mobile { background: rgba(10, 25, 20, .72); }
-  .tour-overlay.tour-mobile .tour-highlight { display: none; }
+  /* Tutorial en celular: se abre el menú y se resalta la sección */
   .tour-overlay.tour-mobile .tour-tooltip {
-    left: 50% !important;
-    top: 50% !important;
-    transform: translate(-50%, -50%);
-    width: 92vw;
-    max-width: 380px;
-    max-height: 80vh;
+    max-width: none;
+    max-height: 46vh;
     overflow-y: auto;
     transition: none;
   }
+  .tour-overlay.tour-mobile .tour-tooltip p { margin-bottom: 12px; }
 }
 
