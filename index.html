@@ -260,54 +260,56 @@
         <!-- ===== VISTA: CONFIGURACIÓN ===== -->
         <section class="view" id="view-config">
           <div class="config-grid">
-            <div class="panel">
-              <div class="panel-header"><h2>Datos del negocio</h2></div>
-              <div class="panel-body">
-                <label class="field">
-                  <span>Nombre del negocio</span>
-                  <input type="text" class="input" id="cfgNombre">
-                </label>
-                <label class="field">
-                  <span>Logo del negocio</span>
-                  <input type="file" class="input" id="cfgLogo" accept="image/*">
-                </label>
-                <label class="field">
-                  <span>Color de fondo</span>
-                  <div class="color-picker-row">
-                    <input type="color" id="cfgBgColor" value="#f1f5f4">
-                    <input type="text" class="input" id="cfgBgColorText" value="#f1f5f4" maxlength="7">
-                  </div>
-                </label>
-                <label class="field">
-                  <span>Color barra lateral</span>
-                  <div class="color-picker-row">
-                    <input type="color" id="cfgSidebarColor" value="#14352a">
-                    <input type="text" class="input" id="cfgSidebarColorText" value="#14352a" maxlength="7">
-                  </div>
-                </label>
-                <label class="field">
-                  <span>Moneda (símbolo)</span>
-                  <input type="text" class="input" id="cfgMoneda" maxlength="3" placeholder="$">
-                </label>
-                <label class="field">
-                  <span>Stock mínimo (alerta roja)</span>
-                  <input type="number" class="input" id="cfgStockMin" min="1">
-                </label>
-                <label class="field">
-                  <span>Stock medio (alerta amarilla)</span>
-                  <input type="number" class="input" id="cfgStockMedio" min="1">
-                </label>
-                <button class="btn btn-primary btn-block" id="btnGuardarConfig">Guardar cambios</button>
-              </div>
-            </div>
-            <div class="panel">
-              <div class="panel-header"><h2>Marcas</h2></div>
-              <div class="panel-body">
-                <div class="marca-add">
-                  <input type="text" class="input" id="nuevaMarca" placeholder="Nueva marca…">
-                  <button class="btn btn-secondary" id="btnAgregarMarca">Agregar</button>
+            <div class="config-block">
+              <div class="panel">
+                <div class="panel-header"><h2>Datos del negocio</h2></div>
+                <div class="panel-body">
+                  <label class="field">
+                    <span>Nombre del negocio</span>
+                    <input type="text" class="input" id="cfgNombre">
+                  </label>
+                  <label class="field">
+                    <span>Logo del negocio</span>
+                    <input type="file" class="input" id="cfgLogo" accept="image/*">
+                  </label>
+                  <label class="field">
+                    <span>Color de fondo</span>
+                    <div class="color-picker-row">
+                      <input type="color" id="cfgBgColor" value="#f1f5f4">
+                      <input type="text" class="input" id="cfgBgColorText" value="#f1f5f4" maxlength="7">
+                    </div>
+                  </label>
+                  <label class="field">
+                    <span>Color barra lateral</span>
+                    <div class="color-picker-row">
+                      <input type="color" id="cfgSidebarColor" value="#14352a">
+                      <input type="text" class="input" id="cfgSidebarColorText" value="#14352a" maxlength="7">
+                    </div>
+                  </label>
+                  <label class="field">
+                    <span>Moneda (símbolo)</span>
+                    <input type="text" class="input" id="cfgMoneda" maxlength="3" placeholder="$">
+                  </label>
+                  <label class="field">
+                    <span>Stock mínimo (alerta roja)</span>
+                    <input type="number" class="input" id="cfgStockMin" min="1">
+                  </label>
+                  <label class="field">
+                    <span>Stock medio (alerta amarilla)</span>
+                    <input type="number" class="input" id="cfgStockMedio" min="1">
+                  </label>
+                  <button class="btn btn-primary btn-block" id="btnGuardarConfig">Guardar cambios</button>
                 </div>
-                <ul class="marca-list" id="listaMarcas"></ul>
+              </div>
+              <div class="panel">
+                <div class="panel-header"><h2>Marcas</h2></div>
+                <div class="panel-body">
+                  <div class="marca-add">
+                    <input type="text" class="input" id="nuevaMarca" placeholder="Nueva marca…">
+                    <button class="btn btn-secondary" id="btnAgregarMarca">Agregar</button>
+                  </div>
+                  <ul class="marca-list" id="listaMarcas"></ul>
+                </div>
               </div>
             </div>
             <div class="panel">

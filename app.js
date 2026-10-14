@@ -1173,17 +1173,19 @@ function cargarLogo(file) {
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
-      const maxSize = 200;
+      const maxSize = 320;
       let { width, height } = img;
       if (width > height) {
         if (width > maxSize) { height *= maxSize / width; width = maxSize; }
       } else {
         if (height > maxSize) { width *= maxSize / height; height = maxSize; }
       }
-      canvas.width = width;
-      canvas.height = height;
-      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-      state.config.logo = canvas.toDataURL('image/jpeg', 0.85);
+      canvas.width = Math.round(width);
+      canvas.height = Math.round(height);
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, 0, 0, width, height);
+      state.config.logo = canvas.toDataURL('image/jpeg', 0.9);
       guardar();
       renderTodo();
       toast('Logo actualizado', 'success');
